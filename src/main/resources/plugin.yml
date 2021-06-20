@@ -1,0 +1,23 @@
+main: fr.westerosrp.WesterosRP
+name: WesterosRP
+version: 0.0.1
+description: Plugin pour gérer une partie de WesterosRP
+api-version: 1.17
+load: STARTUP
+author: loockeeer
+depend: [WorldGuard, LuckPerms]
+prefix: WesterosRP
+commands:
+  winvsee:
+    description: "Permet de voir l'inventaire d'un joueur"
+    permission: westerosrp.admin
+    permission-message: Vous devez être administrateur pour effectuer cette commande !
+    usage: "Utilisation : /<command> <player>"
+
+permissions:
+  westerosrp.*:
+    description: "Donne l'acces à toutes les commandes westerosrp"
+  westerosrp.admin:
+    description: "Les commandes admin de westerosrp utilisent cette permission"
+  westerosrp.joueur:
+    description: "Les commandes joueur de westerosrp utilisent cette permission"
