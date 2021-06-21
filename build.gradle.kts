@@ -27,7 +27,7 @@ val minecraft_version: String by project
 
 dependencies {
     compileOnly("org.spigotmc", "spigot-api", "$minecraft_version-R0.1-SNAPSHOT")
-    compileOnly("net.luckperms:api:5.3")
+    compileOnly("net.luckperms", "api", "5.3")
 }
 
 buildConfig {
