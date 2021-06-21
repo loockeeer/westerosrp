@@ -1,6 +1,7 @@
 package fr.westerosrp
 
 import fr.westerosrp.command.Invsee
+import fr.westerosrp.command.Start
 import fr.westerosrp.listeners.LuckPermsListener
 import fr.westerosrp.listeners.PlayerChat
 import fr.westerosrp.listeners.PlayerJoin
@@ -19,6 +20,11 @@ class WesterosRP : JavaPlugin {
             var instance = Invsee()
             it.setExecutor(instance)
             it.setTabCompleter(instance)
+        }
+
+        getCommand("wstart")?.also {
+            var instance = Start()
+            it.setExecutor(instance)
         }
 
 

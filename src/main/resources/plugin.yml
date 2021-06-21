@@ -13,6 +13,11 @@ commands:
     permission: westerosrp.admin
     permission-message: Vous devez être administrateur pour effectuer cette commande !
     usage: "Utilisation : /<command> <player>"
+  wstart:
+    description: "Permet de démarrer les jours"
+    permission: westerosrp.admin
+    permission-message: vous devez être administrateur pour effectuer cette commande !
+    usage: "Utilisation : /<command>"
 
 permissions:
   westerosrp.*:
