@@ -28,6 +28,7 @@ val minecraft_version: String by project
 dependencies {
     compileOnly("org.spigotmc", "spigot-api", "$minecraft_version-R0.1-SNAPSHOT")
     compileOnly("net.luckperms", "api", "5.3")
+    implementation("fr.mrmicky", "fastboard", "1.2.0")
 }
 
 buildConfig {
@@ -57,6 +58,8 @@ fun getGitBranch(): String {
     return stdout.toString("UTF-8").trim()
 }
 
+
+
 tasks {
     processResources {
         filter(FixCrLfFilter::class)
@@ -69,6 +72,11 @@ tasks {
     build {
         dependsOn(shadowJar)
     }
+
+    shadowJar {
+        relocate("fr.mrmicky.fastboard", "fr.westerosrp.fastboard")
+    }
+
     withType<KotlinCompile> {
         kotlinOptions {
             jvmTarget = "16"
