@@ -10,12 +10,12 @@ import java.util.*
 
 fun updatePlayer(player: Player) {
     Team.getPlayerTeam(player).run {
+        var s = if (Bukkit.getOnlinePlayers().size > 1) "s" else ""
         player.setPlayerListHeaderFooter("${ChatColor.GRAY}${ChatColor.BOLD}Westeros RP\n",
             """
-            
-            ${ChatColor.GOLD}Plugin: ${ChatColor.GRAY}Loockeeer
-            ${ChatColor.GOLD}Build: ${ChatColor.GRAY}Lohar_
-            ${ChatColor.GOLD}Chômage: ${ChatColor.GRAY}gorec
+                
+                ${ChatColor.GRAY}${Bukkit.getOnlinePlayers().size}${ChatColor.GOLD} joueur${s} connecté${s}${ChatColor.RESET}
+                ${ChatColor.GOLD}Votre ping: ${ChatColor.GRAY}${player.ping} ms${ChatColor.RESET}
         """.trimIndent())
         player.setPlayerListName(this?.getPlayerName(player) ?: player.name)
         player.setDisplayName(this?.getPlayerName(player) ?: player.name)

@@ -1,6 +1,7 @@
 package fr.westerosrp.listeners
 
-import fr.westerosrp.Team
+import fr.westerosrp.game.Scoreboard
+import fr.westerosrp.game.Team
 import org.bukkit.ChatColor
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -11,6 +12,8 @@ class PlayerQuit : Listener {
     fun handle(e: PlayerQuitEvent) {
         val playerTeam = Team.getPlayerTeam(e.player) ?: return
         e.quitMessage = null
+
+        Scoreboard.removeBoard(e.player)
 
         e.player.server.broadcastMessage(
             "[${ChatColor.RED}-${ChatColor.RESET}] ${playerTeam.getPlayerName(e.player)}"

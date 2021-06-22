@@ -1,4 +1,4 @@
-package fr.westerosrp
+package fr.westerosrp.game
 
 import net.luckperms.api.LuckPermsProvider
 import net.luckperms.api.context.DefaultContextKeys
@@ -11,6 +11,10 @@ import net.luckperms.api.node.types.InheritanceNode
 import org.bukkit.ChatColor
 import org.bukkit.entity.Player
 
+
+private operator fun GroupManager.get(s: String): Group? {
+    return this.getGroup(s)
+}
 
 enum class Team(val humanName: String, val group: Group?, val color: ChatColor) {
     ADMIN("Administrateur", LuckPermsProvider.get().groupManager["admin"], ChatColor.DARK_RED),
@@ -46,6 +50,3 @@ enum class Team(val humanName: String, val group: Group?, val color: ChatColor) 
     }
 }
 
-private operator fun GroupManager.get(s: String): Group? {
-    return this.getGroup(s)
-}
