@@ -1,12 +1,8 @@
 package fr.westerosrp.command
 
-import fr.westerosrp.Team
-import net.luckperms.api.LuckPerms
-import net.luckperms.api.LuckPermsProvider
-import net.luckperms.api.node.Node
+import fr.westerosrp.WesterosRP
+import fr.westerosrp.game.Month
 import org.bukkit.*
-import org.bukkit.advancement.Advancement
-import org.bukkit.advancement.AdvancementProgress
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
@@ -64,8 +60,8 @@ class Start : CommandExecutor {
 
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "scoreboard players set @a SoulsMobs 0")
 
-        Bukkit.broadcastMessage("${ChatColor.BLUE}Début du jour 1 !")
 
+        WesterosRP.instance.start()
         return true
     }
 }
