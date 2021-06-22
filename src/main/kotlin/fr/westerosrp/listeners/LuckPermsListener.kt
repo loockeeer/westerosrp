@@ -1,16 +1,13 @@
 package fr.westerosrp.listeners
 
-import fr.westerosrp.Utils
+
 import fr.westerosrp.WesterosRP
+import fr.westerosrp.updatePlayer
 import net.luckperms.api.LuckPerms
 import net.luckperms.api.event.EventBus
 import net.luckperms.api.event.node.NodeAddEvent
 import net.luckperms.api.event.node.NodeRemoveEvent
 import net.luckperms.api.model.user.User
-import net.luckperms.api.node.types.InheritanceNode
-import net.luckperms.api.node.types.PermissionNode
-import net.luckperms.api.node.types.PrefixNode
-import net.luckperms.api.node.types.SuffixNode
 import org.bukkit.entity.Player
 
 
@@ -28,7 +25,7 @@ data class LuckPermsListener(val plugin: WesterosRP, val luckPerms: LuckPerms) {
         plugin.server.scheduler.runTask(plugin, Runnable {
             val player: Player = plugin.server.getPlayer(target.uniqueId)
                 ?: return@Runnable
-            Utils.updatePlayer(player)
+            updatePlayer(player)
         })
     }
 
@@ -39,7 +36,7 @@ data class LuckPermsListener(val plugin: WesterosRP, val luckPerms: LuckPerms) {
         plugin.server.scheduler.runTask(plugin, Runnable {
             val player: Player = plugin.server.getPlayer(target.uniqueId)
                 ?: return@Runnable
-            Utils.updatePlayer(player)
+            updatePlayer(player)
         })
     }
 }
