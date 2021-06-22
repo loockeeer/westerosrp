@@ -2,16 +2,26 @@ package fr.westerosrp
 
 import fr.westerosrp.command.Invsee
 import fr.westerosrp.command.Start
+import fr.westerosrp.game.Month
+import fr.westerosrp.game.Scoreboard
+import fr.westerosrp.game.Team
 import fr.westerosrp.listeners.LuckPermsListener
 import fr.westerosrp.listeners.PlayerChat
 import fr.westerosrp.listeners.PlayerJoin
 import fr.westerosrp.listeners.PlayerQuit
 import net.luckperms.api.LuckPerms
+import org.bukkit.Bukkit
 import org.bukkit.plugin.java.JavaPlugin
 
-
 class WesterosRP : JavaPlugin {
-    constructor()
+    var running = false
+    companion object {
+        lateinit var instance: WesterosRP
+        private set
+    }
+    constructor() {
+        WesterosRP.instance = this
+    }
 
     override fun onEnable() {
         saveDefaultConfig()
@@ -19,7 +29,7 @@ class WesterosRP : JavaPlugin {
         getCommand("winvsee")?.also {
             var instance = Invsee()
             it.setExecutor(instance)
-            it.setTabCompleter(instance)
+            it.tabCompleter = instance
         }
 
         getCommand("wstart")?.also {
@@ -46,10 +56,27 @@ class WesterosRP : JavaPlugin {
             logger.warning("Unable to load correctly luckperms.")
         }
 
+        Bukkit.getOnlinePlayers().forEach {
+            Scoreboard.updateBoard(it)
+            updatePlayer(it)
+        }
+
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(this, {
+            Bukkit.getOnlinePlayers().forEach {
+                Scoreboard.updateBoard(it)
+            }
+        }, 0L, 20L)
+
         logger.info("${description.name} version ${description.version} enabled!")
     }
 
     override fun onDisable() {
         logger.info("${description.name} version ${description.version} disabled!")
+    }
+
+    fun start() {
+        this.running = true
+        Month.nextMonth()
+        scheduleMonthRoll(this)
     }
 }
