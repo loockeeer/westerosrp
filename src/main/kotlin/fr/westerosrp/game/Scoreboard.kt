@@ -7,6 +7,7 @@ import fr.westerosrp.timeUntilMidnight
 import org.apache.commons.lang.time.DateUtils
 import org.apache.commons.lang.time.DurationFormatUtils
 import org.bukkit.ChatColor
+import org.bukkit.Statistic
 import org.bukkit.entity.Player
 import java.util.*
 import kotlin.Comparator
@@ -15,17 +16,31 @@ import kotlin.collections.HashMap
 
 object Scoreboard {
     private val board = HashMap<UUID, FastBoard>()
+    private val boardTrigger = HashMap<UUID, Boolean>()
 
-    fun generateBoard(player: Player): FastBoard {
+    fun triggerBoard(player: Player): Boolean {
+        return triggerBoard(player, !(boardTrigger[player.uniqueId] ?: false))
+    }
+
+    fun triggerBoard(player: Player, state: Boolean): Boolean {
+        boardTrigger[player.uniqueId] = state
+
+        if(!state) removeBoard(player)
+
+        return state
+    }
+
+    private fun generateBoard(player: Player): FastBoard {
         return FastBoard(player).also { this.board[player.uniqueId] = it }
     }
 
     fun removeBoard(player: Player): FastBoard? {
-        return this.board.remove(player.uniqueId).also { it?.delete() }
+        return this.board.remove(player.uniqueId).also { it?.delete()}
     }
 
-    fun updateBoard(player: Player): FastBoard {
-        return updateBoard(getBoard(player))
+    fun updateBoard(player: Player): FastBoard? {
+        return if(boardTrigger[player.uniqueId] != false) updateBoard(getBoard(player))
+        else null
     }
 
     private fun updateBoard(board: FastBoard): FastBoard {
@@ -43,8 +58,10 @@ object Scoreboard {
             "${ChatColor.GOLD}Assauts:${ChatColor.RESET} ${boolToString(Month.ASSAULTS.isActivated(Month.currentMonth))}",
             "${ChatColor.GOLD}End:${ChatColor.RESET} ${boolToString(Month.END.isActivated(Month.currentMonth))}",
             "${ChatColor.DARK_GRAY}--------------------",
+            "${ChatColor.GOLD}Kills:${ChatColor.GRAY} ${board.player.getStatistic(Statistic.PLAYER_KILLS)}",
+            "${ChatColor.GOLD}Morts:${ChatColor.GRAY} ${board.player.getStatistic(Statistic.DEATHS)}",
+            "${ChatColor.DARK_GRAY}--------------------",
             "${ChatColor.GOLD}${ChatColor.BOLD}map.lescoupains.tk",
-            "${(0..100).random()}"
         )
         return board
     }

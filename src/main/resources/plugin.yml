@@ -3,9 +3,9 @@ name: WesterosRP
 version: 0.0.1
 description: Plugin pour gérer une partie de WesterosRP
 api-version: 1.17
-load: STARTUP
+load: POSTWORLD
 author: loockeeer
-depend: [WorldGuard, LuckPerms]
+depend: [WorldEdit, WorldGuard, LuckPerms]
 prefix: WesterosRP
 commands:
   winvsee:
@@ -16,12 +16,25 @@ commands:
   wstart:
     description: "Permet de démarrer les jours"
     permission: westerosrp.admin
-    permission-message: vous devez être administrateur pour effectuer cette commande !
-    usage: "Utilisation : /<command>"
+    permission-message: Vous devez être administrateur pour effectuer cette commande !
+    usage: "/<command>"
+  wnext:
+    description: "Permet de sauter un jour"
+    permission: westerosrp.admin
+    permission-message: Vous devez être administrateur pour effectuer cette commande !
+    usage: "/<command> [jour]"
+  wscoreboard:
+    description: "Permet de choisir l'affichage du scoreboard"
+    permission: westerosrp.joueur
+    permission-message: Vous devez être un joueur pour effectuer cette commande !
+    usage: "/<command> [disable|enable]"
 
 permissions:
   westerosrp.*:
     description: "Donne l'acces à toutes les commandes westerosrp"
+    children:
+      - westereosrp.admin
+      - westerosrp.joueur
   westerosrp.admin:
     description: "Les commandes admin de westerosrp utilisent cette permission"
   westerosrp.joueur:

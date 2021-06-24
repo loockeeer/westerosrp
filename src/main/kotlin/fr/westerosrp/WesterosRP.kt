@@ -1,14 +1,14 @@
 package fr.westerosrp
 
 import fr.westerosrp.command.Invsee
+import fr.westerosrp.command.Next
+import fr.westerosrp.command.ScoreboardTrigger
 import fr.westerosrp.command.Start
 import fr.westerosrp.game.Month
 import fr.westerosrp.game.Scoreboard
 import fr.westerosrp.game.Team
-import fr.westerosrp.listeners.LuckPermsListener
-import fr.westerosrp.listeners.PlayerChat
-import fr.westerosrp.listeners.PlayerJoin
-import fr.westerosrp.listeners.PlayerQuit
+import fr.westerosrp.game.Territory
+import fr.westerosrp.listeners.*
 import net.luckperms.api.LuckPerms
 import org.bukkit.Bukkit
 import org.bukkit.plugin.java.JavaPlugin
@@ -34,25 +34,33 @@ class WesterosRP : JavaPlugin() {
             var instance = Start()
             it.setExecutor(instance)
         }
+        
+        getCommand("wnext")?.also {
+            var instance = Next()
+            it.setExecutor(instance)
+            it.tabCompleter = instance
+        }
 
-
-        val luckPerms = server.servicesManager.load(LuckPerms::class.java)
-
-        Team.values().forEach {
-            if(!it.isCorrect()) {
-                logger.warning("Team ${it.name} group cannot be loaded successfully !")
-            }
+        getCommand("wscoreboard")?.also {
+            var instance = ScoreboardTrigger()
+            it.setExecutor(instance)
+            it.tabCompleter = instance
         }
 
         server.pluginManager.registerEvents(PlayerChat(), this)
         server.pluginManager.registerEvents(PlayerJoin(), this)
         server.pluginManager.registerEvents(PlayerQuit(), this)
+        server.pluginManager.registerEvents(PlayerMove(), this)
 
+        val luckPerms = server.servicesManager.load(LuckPerms::class.java)
         if (luckPerms != null) {
             LuckPermsListener(this, luckPerms).register()
         } else {
             logger.warning("Unable to load correctly luckperms.")
         }
+
+        Team.values().forEach(Team::initialize)
+        Territory.values().forEach(Territory::initialize)
 
         Bukkit.getOnlinePlayers().forEach {
             Scoreboard.updateBoard(it)
@@ -62,6 +70,7 @@ class WesterosRP : JavaPlugin() {
         Bukkit.getScheduler().scheduleSyncRepeatingTask(this, {
             Bukkit.getOnlinePlayers().forEach {
                 Scoreboard.updateBoard(it)
+                updateTabList(it)
             }
         }, 0L, 20L)
 

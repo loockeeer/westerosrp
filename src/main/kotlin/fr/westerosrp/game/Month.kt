@@ -44,7 +44,7 @@ enum class Month(val message: String) {
     },
 
 
-    TAX("Vous avez reçu les impots de vos territoires soumis") {
+    TAX("Vos vassaux ont déposé leur taxe") {
         override fun isMonth(currentMonth: Int): Boolean {
             return true
         }
@@ -59,15 +59,26 @@ enum class Month(val message: String) {
 
     companion object {
         var currentMonth: Int = 0
-        fun nextMonth() {
-            currentMonth++
+        fun nextMonth(month: Int): Int {
+            currentMonth = month
+            rollMonth()
+            return currentMonth
+        }
 
+        fun nextMonth(): Int {
+            currentMonth++
+            rollMonth()
+            return currentMonth
+        }
+
+        fun rollMonth() {
             Bukkit.broadcastMessage("${ChatColor.GOLD}Fin du mois ${ChatColor.GRAY}${currentMonth-1}${ChatColor.GOLD} !")
 
             values().filter { it.isMonth(currentMonth) }.forEach { modifier ->
                 modifier.messageInhibitor(Bukkit.getOnlinePlayers()).forEach{
                     it.sendMessage("${ChatColor.GOLD}${modifier.message}")
                 }
+                modifier.execute(currentMonth)
             }
 
             Bukkit.broadcastMessage("${ChatColor.GOLD}Début du mois ${ChatColor.GRAY}${currentMonth}${ChatColor.GOLD} !")
@@ -80,5 +91,8 @@ enum class Month(val message: String) {
     abstract fun isActivated(currentMonth: Int): Boolean
     open fun messageInhibitor(players: Collection<Player>): Collection<Player> {
         return players
+    }
+    open fun execute(currentMonth: Int) {
+        return
     }
 }

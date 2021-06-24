@@ -6,8 +6,9 @@ import org.bukkit.*
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
+import org.bukkit.command.TabCompleter
 
-class Start : CommandExecutor {
+class Start : CommandExecutor, TabCompleter {
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
         sender.server.worlds.forEach {
             it.apply {
@@ -35,13 +36,12 @@ class Start : CommandExecutor {
 
         Bukkit.getOnlinePlayers().forEach { player ->
             player.inventory.clear()
-            player.activePotionEffects.removeAll(player.activePotionEffects)
+            player.activePotionEffects.clear()
             player.health = 20.0
-            player.saturation = 20.0F
             player.exp = 0.0F
             player.level = 0
 
-            player.teleport(Location(overworld, 117.0, 75.0, 14.0))
+            //player.teleport(Location(overworld, 117.0, 75.0, 14.0))
 
             player.server.advancementIterator().forEach { advancement ->
                 run {
@@ -52,10 +52,10 @@ class Start : CommandExecutor {
                 }
             }
 
-            player.isOp = false
+            //player.isOp = false
 
 
-            player.gameMode = GameMode.SURVIVAL
+            //player.gameMode = GameMode.SURVIVAL
         }
 
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "scoreboard players set @a SoulsMobs 0")
@@ -63,6 +63,15 @@ class Start : CommandExecutor {
 
         WesterosRP.instance.start()
         return true
+    }
+
+    override fun onTabComplete(
+        sender: CommandSender,
+        command: Command,
+        alias: String,
+        args: Array<out String>
+    ): MutableList<String>? {
+        return null
     }
 }
 

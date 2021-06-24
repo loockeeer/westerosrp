@@ -11,7 +11,7 @@ import org.bukkit.entity.Player
 class Invsee : CommandExecutor,TabCompleter {
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
         if(sender !is Player) {
-            sender.sendMessage("${ChatColor.RED}Tu dois être un joueur pour faire cette commande !")
+            sender.sendMessage("${ChatColor.GOLD}Tu n'es pas un joueur !")
             return true
         }
 
@@ -46,10 +46,10 @@ class Invsee : CommandExecutor,TabCompleter {
         alias: String,
         args: Array<out String>
     ): MutableList<String>? {
-        if (args.size == 1 || sender.hasPermission("westerosrp.admin")) {
-            return Bukkit.getOnlinePlayers().stream().map { it.name }.toList()
+        return if (args.size == 1) {
+            Bukkit.getOnlinePlayers().stream().map { it.name }.toList()
         } else {
-            return mutableListOf()
+            null
         }
     }
 }
