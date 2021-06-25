@@ -7,9 +7,9 @@ import org.ktorm.schema.uuid
 import org.ktorm.schema.varchar
 
 object StoredPlayer : Table<Nothing>("stored_player") {
-    val unique_id = uuid("unique_id")
-    val pos_x = long("pos_x").isNull()
-    val pos_y = long("pos_y").isNull()
-    val pos_z = long("pos_z").isNull()
-    val pos_world = varchar("pos_world").isNull()
+	val unique_id = uuid("unique_id")
+	val pos_x = long("pos_x").isNull()
+	val pos_y = long("pos_y").isNull()
+	val pos_z = long("pos_z").isNull()
+	val pos_world = varchar("pos_world").isNull()
 }

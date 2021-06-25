@@ -6,93 +6,87 @@ import org.bukkit.ChatColor
 import org.bukkit.entity.Player
 
 enum class Month(val message: String) {
-    NETHER("Le nether est maintenant activé !") {
-        private val month = 1
-        override fun isMonth(currentMonth: Int): Boolean {
-            return currentMonth == month
-        }
-        override fun isActivated(currentMonth: Int): Boolean {
-            return currentMonth >= month
-        }
-    },
-    PVP("Le PvP est maintenant activé !") {
-        private val month = 2
-        override fun isMonth(currentMonth: Int): Boolean {
-            return currentMonth == month
-        }
-        override fun isActivated(currentMonth: Int): Boolean {
-            return currentMonth >= month
-        }
-    },
-    ASSAULTS("Les assauts sont maintenant activés !") {
-        private val month = 3
-        override fun isMonth(currentMonth: Int): Boolean {
-            return currentMonth == month
-        }
-        override fun isActivated(currentMonth: Int): Boolean {
-            return currentMonth >= month
-        }
-    },
-    END("L'end est maintenant activé !") {
-        private val month = 5
-        override fun isMonth(currentMonth: Int): Boolean {
-            return currentMonth == month
-        }
-        override fun isActivated(currentMonth: Int): Boolean {
-            return currentMonth >= month
-        }
-    },
+	NETHER("Le nether est maintenant activé !") {
+		private val month = 1
+		override fun isMonth(currentMonth: Int) = currentMonth == month
 
 
-    TAX("Vos vassaux ont déposé leur taxe") {
-        override fun isMonth(currentMonth: Int): Boolean {
-            return true
-        }
-        override fun isActivated(currentMonth: Int): Boolean {
-            return true
-        }
+		override fun isActivated(currentMonth: Int) = currentMonth >= month
 
-        override fun messageInhibitor(players: Collection<Player>): Collection<Player> {
-            return players
-        }
-    };
+	},
+	PVP("Le PvP est maintenant activé !") {
+		private val month = 2
+		override fun isMonth(currentMonth: Int) = currentMonth == month
 
-    companion object {
-        var currentMonth: Int = 0
-        fun nextMonth(month: Int): Int {
-            currentMonth = month
-            rollMonth()
-            return currentMonth
-        }
 
-        fun nextMonth(): Int {
-            currentMonth++
-            rollMonth()
-            return currentMonth
-        }
+		override fun isActivated(currentMonth: Int) = currentMonth >= month
 
-        fun rollMonth() {
-            Bukkit.broadcastMessage("${ChatColor.GOLD}Fin du mois ${ChatColor.GRAY}${currentMonth-1}${ChatColor.GOLD} !")
+	},
+	ASSAULTS("Les assauts sont maintenant activés !") {
+		private val month = 3
+		override fun isMonth(currentMonth: Int) = currentMonth == month
 
-            values().filter { it.isMonth(currentMonth) }.forEach { modifier ->
-                modifier.messageInhibitor(Bukkit.getOnlinePlayers()).forEach{
-                    it.sendMessage("${ChatColor.GOLD}${modifier.message}")
-                }
-                modifier.execute(currentMonth)
-            }
+		override fun isActivated(currentMonth: Int) = currentMonth >= month
 
-            Bukkit.broadcastMessage("${ChatColor.GOLD}Début du mois ${ChatColor.GRAY}${currentMonth}${ChatColor.GOLD} !")
+	},
+	END("L'end est maintenant activé !") {
+		private val month = 5
+		override fun isMonth(currentMonth: Int) = currentMonth == month
 
-            Bukkit.getOnlinePlayers().forEach(Scoreboard::updateBoard)
-        }
-    }
+		override fun isActivated(currentMonth: Int) = currentMonth >= month
+	},
 
-    abstract fun isMonth(currentMonth: Int): Boolean
-    abstract fun isActivated(currentMonth: Int): Boolean
-    open fun messageInhibitor(players: Collection<Player>): Collection<Player> {
-        return players
-    }
-    open fun execute(currentMonth: Int) {
-        return
-    }
+
+	TAX("Vos vassaux ont déposé leur taxe") {
+		override fun isMonth(currentMonth: Int) = true
+
+		override fun isActivated(currentMonth: Int) = true
+
+		override fun messageInhibitor(players: Collection<Player>) = players
+	};
+
+	companion object {
+		var currentMonth: Int = WesterosRP.instance.config.getInt("month")
+		fun nextMonth(month: Int): Int {
+			currentMonth = month
+			rollMonth()
+			save()
+			return currentMonth
+		}
+
+		fun nextMonth(): Int {
+			currentMonth++
+			rollMonth()
+			save()
+			return currentMonth
+		}
+
+		fun save() {
+			WesterosRP.instance.config.set("month", currentMonth)
+			WesterosRP.instance.saveConfig()
+		}
+
+		fun rollMonth() {
+			Bukkit.broadcastMessage("${ChatColor.GOLD}Fin du mois ${ChatColor.GRAY}${currentMonth - 1}${ChatColor.GOLD} !")
+
+			values().filter { it.isMonth(currentMonth) }.forEach { modifier ->
+				modifier.messageInhibitor(Bukkit.getOnlinePlayers()).forEach {
+					it.sendMessage("${ChatColor.GOLD}${modifier.message}")
+				}
+				modifier.execute(currentMonth)
+			}
+
+			Bukkit.broadcastMessage("${ChatColor.GOLD}Début du mois ${ChatColor.GRAY}${currentMonth}${ChatColor.GOLD} !")
+
+			Bukkit.getOnlinePlayers().forEach(Scoreboard::updateBoard)
+		}
+	}
+
+	abstract fun isMonth(currentMonth: Int): Boolean
+	abstract fun isActivated(currentMonth: Int): Boolean
+	open fun messageInhibitor(players: Collection<Player>) = players
+
+	open fun execute(currentMonth: Int) {
+		return
+	}
 }

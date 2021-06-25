@@ -7,9 +7,9 @@ import org.bukkit.event.Listener
 import org.bukkit.event.player.AsyncPlayerChatEvent
 
 class PlayerChat : Listener {
-    @EventHandler
-    fun handle(e: AsyncPlayerChatEvent) {
-        val playerTeam = Team.getPlayerTeam(e.player) ?: return
-        e.format = "%s${playerTeam.color} :${ChatColor.RESET} %s"
-    }
+	@EventHandler
+	fun handle(e: AsyncPlayerChatEvent) {
+		val playerTeam = Team.getPlayerTeam(e.player) ?: return
+		e.format = "%s${playerTeam.color} :${ChatColor.RESET} %s"
+	}
 }

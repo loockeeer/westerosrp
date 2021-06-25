@@ -9,17 +9,17 @@ import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerJoinEvent
 
 class PlayerJoin : Listener {
-    @EventHandler
-    fun handle(e: PlayerJoinEvent) {
-        val playerTeam = Team.getPlayerTeam(e.player) ?: return
-        e.joinMessage = null
+	@EventHandler
+	fun handle(e: PlayerJoinEvent) {
+		val playerTeam = Team.getPlayerTeam(e.player) ?: return
+		e.joinMessage = null
 
-        e.player.server.broadcastMessage(
-            "[${ChatColor.GREEN}+${ChatColor.RESET}] ${playerTeam.getPlayerName(e.player)}"
-        )
+		e.player.server.broadcastMessage(
+			"[${ChatColor.GREEN}+${ChatColor.RESET}] ${playerTeam.getPlayerName(e.player)}"
+		)
 
-        Scoreboard.updateBoard(e.player)
+		Scoreboard.updateBoard(e.player)
 
-        updatePlayer(e.player)
-    }
+		updatePlayer(e.player)
+	}
 }

@@ -5,7 +5,7 @@ description: Plugin pour gérer une partie de WesterosRP
 api-version: 1.17
 load: POSTWORLD
 author: loockeeer
-depend: [WorldEdit, WorldGuard, LuckPerms]
+depend: [ WorldEdit, WorldGuard, LuckPerms ]
 prefix: WesterosRP
 commands:
   winvsee:
@@ -28,7 +28,11 @@ commands:
     permission: westerosrp.joueur
     permission-message: Vous devez être un joueur pour effectuer cette commande !
     usage: "/<command> [disable|enable]"
-
+  wreliclist:
+    description: "Permet d'afficher la liste des reliques"
+    permission: westerosrp.admin
+    permission-message: Vous devez être administrateur pour effectuer cette commande !
+    usage: "/<command>"
 permissions:
   westerosrp.*:
     description: "Donne l'acces à toutes les commandes westerosrp"

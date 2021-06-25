@@ -1,9 +1,6 @@
 package fr.westerosrp
 
-import fr.westerosrp.command.Invsee
-import fr.westerosrp.command.Next
-import fr.westerosrp.command.ScoreboardTrigger
-import fr.westerosrp.command.Start
+import fr.westerosrp.command.*
 import fr.westerosrp.game.Month
 import fr.westerosrp.game.Scoreboard
 import fr.westerosrp.game.Team
@@ -14,76 +11,90 @@ import org.bukkit.Bukkit
 import org.bukkit.plugin.java.JavaPlugin
 
 class WesterosRP : JavaPlugin() {
-    var running = false
-    companion object {
-        lateinit var instance: WesterosRP
-        private set
-    }
+	var running = false
 
-    override fun onEnable() {
-        instance = this
-        saveDefaultConfig()
+	companion object {
+		lateinit var instance: WesterosRP
+			private set
+	}
 
-        getCommand("winvsee")?.also {
-            var instance = Invsee()
-            it.setExecutor(instance)
-            it.tabCompleter = instance
-        }
+	override fun onEnable() {
+		instance = this
+		saveDefaultConfig()
 
-        getCommand("wstart")?.also {
-            var instance = Start()
-            it.setExecutor(instance)
-        }
-        
-        getCommand("wnext")?.also {
-            var instance = Next()
-            it.setExecutor(instance)
-            it.tabCompleter = instance
-        }
+		getCommand("winvsee")?.also {
+			var instance = Invsee()
+			it.setExecutor(instance)
+			it.tabCompleter = instance
+		}
 
-        getCommand("wscoreboard")?.also {
-            var instance = ScoreboardTrigger()
-            it.setExecutor(instance)
-            it.tabCompleter = instance
-        }
+		getCommand("wstart")?.also {
+			val instance = Start()
+			it.setExecutor(instance)
+		}
 
-        server.pluginManager.registerEvents(PlayerChat(), this)
-        server.pluginManager.registerEvents(PlayerJoin(), this)
-        server.pluginManager.registerEvents(PlayerQuit(), this)
-        server.pluginManager.registerEvents(PlayerMove(), this)
+		getCommand("wnext")?.also {
+			val instance = Next()
+			it.setExecutor(instance)
+			it.tabCompleter = instance
+		}
 
-        val luckPerms = server.servicesManager.load(LuckPerms::class.java)
-        if (luckPerms != null) {
-            LuckPermsListener(this, luckPerms).register()
-        } else {
-            logger.warning("Unable to load correctly luckperms.")
-        }
+		getCommand("wscoreboard")?.also {
+			val instance = ScoreboardTrigger()
+			it.setExecutor(instance)
+			it.tabCompleter = instance
+		}
 
-        Team.values().forEach(Team::initialize)
-        Territory.values().forEach(Territory::initialize)
+		getCommand("wreliclist")?.also {
+			val instance = RelicList()
+			it.setExecutor(instance)
+		}
 
-        Bukkit.getOnlinePlayers().forEach {
-            Scoreboard.updateBoard(it)
-            updatePlayer(it)
-        }
+		server.pluginManager.registerEvents(PlayerChat(), this)
+		server.pluginManager.registerEvents(PlayerJoin(), this)
+		server.pluginManager.registerEvents(PlayerQuit(), this)
+		server.pluginManager.registerEvents(PlayerMove(), this)
 
-        Bukkit.getScheduler().scheduleSyncRepeatingTask(this, {
-            Bukkit.getOnlinePlayers().forEach {
-                Scoreboard.updateBoard(it)
-                updateTabList(it)
-            }
-        }, 0L, 20L)
+		val luckPerms = server.servicesManager.load(LuckPerms::class.java)
+		if (luckPerms != null) {
+			LuckPermsListener(this, luckPerms).register()
+		} else {
+			logger.warning("Unable to load correctly luckperms.")
+		}
 
-        logger.info("${description.name} version ${description.version} enabled!")
-    }
+		running = config.getBoolean("running")
 
-    override fun onDisable() {
-        logger.info("${description.name} version ${description.version} disabled!")
-    }
+		Team.values().forEach(Team::initialize)
+		Territory.values().forEach(Territory::initialize)
 
-    fun start() {
-        this.running = true
-        Month.nextMonth()
-        scheduleMonthRoll(this)
-    }
+		Bukkit.getOnlinePlayers().forEach {
+			Scoreboard.updateBoard(it)
+			updatePlayer(it)
+		}
+
+		Bukkit.getScheduler().scheduleSyncRepeatingTask(this, {
+			Bukkit.getOnlinePlayers().forEach {
+				Scoreboard.updateBoard(it)
+				updateTabList(it)
+			}
+		}, 0L, 20L)
+
+		if(running) {
+			scheduleMonthRoll(this)
+		}
+
+		logger.info("${description.name} version ${description.version} enabled!")
+	}
+
+	override fun onDisable() {
+		logger.info("${description.name} version ${description.version} disabled!")
+	}
+
+	fun start() {
+		this.running = true
+		config.set("running", true)
+		saveConfig()
+		Month.nextMonth(1)
+		scheduleMonthRoll(this)
+	}
 }
