@@ -1,7 +1,9 @@
 package fr.westerosrp.game
 
+import fr.westerosrp.WesterosRP
 import org.bukkit.ChatColor
 import org.bukkit.Material
+import org.bukkit.NamespacedKey
 import org.bukkit.attribute.Attribute
 import org.bukkit.attribute.AttributeModifier
 import org.bukkit.enchantments.Enchantment
@@ -9,6 +11,7 @@ import org.bukkit.entity.Player
 import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.Repairable
+import org.bukkit.persistence.PersistentDataType
 import org.bukkit.potion.PotionEffectType
 import java.util.*
 
@@ -16,6 +19,9 @@ enum class RelicType(val humanName: String, val color: ChatColor) {
 	RARE("Rare", ChatColor.AQUA),
 	EPIC("Epique", ChatColor.LIGHT_PURPLE),
 	LEGENDARY("Légendaire", ChatColor.GOLD),
+	SPECIAL("Spécial", ChatColor.DARK_GRAY),
+	DUNGEON("Donjon", ChatColor.RED),
+	FRAGMENT("Fragment", ChatColor.GRAY)
 }
 
 enum class Relic(val humanName: String, val lore: String, val type: RelicType, val material: Material) {
@@ -181,7 +187,39 @@ enum class Relic(val humanName: String, val lore: String, val type: RelicType, v
 				}
 			}
 		}
+	},
+
+	FRAGMENT_GREEN("Valshamr", "Une relique spéciale renfermant un pouvoir immense", RelicType.FRAGMENT, Material.RAW_GOLD) {
+		override fun generateItemStack(): ItemStack {
+			return super.generateItemStack().also { stack ->
+				stack.itemMeta = stack.itemMeta?.also {
+					it.setDisplayName("${ChatColor.GREEN}$humanName [${type.humanName}]")
+				}
+			}
+		}
+	},
+	FRAGMENT_RED("Skidbladnir", "Une relique spéciale renfermant un pouvoir immense", RelicType.FRAGMENT, Material.NETHERITE_SCRAP) {
+		override fun generateItemStack(): ItemStack {
+			return super.generateItemStack().also { stack ->
+				stack.itemMeta = stack.itemMeta?.also {
+					it.setDisplayName("${ChatColor.RED}$humanName [${type.humanName}]")
+				}
+			}
+		}
+	},
+	FRAGMENT_BLUE("Naglfar", "Une relique spéciale renfermant un pouvoir immense", RelicType.FRAGMENT, Material.PRISMARINE_CRYSTALS) {
+		override fun generateItemStack(): ItemStack {
+			return super.generateItemStack().also { stack ->
+				stack.itemMeta = stack.itemMeta?.also {
+					it.setDisplayName("${ChatColor.AQUA}$humanName [${type.humanName}]")
+				}
+			}
+		}
 	};
+
+	companion object {
+		val relicKey = NamespacedKey(WesterosRP.instance, "relic-id")
+	}
 
 	open fun onInventoryAdd(player: Player) {}
 
@@ -189,15 +227,23 @@ enum class Relic(val humanName: String, val lore: String, val type: RelicType, v
 		return ItemStack(material, 1)
 			.also { stack ->
 				stack.itemMeta = stack.itemMeta?.also {
-					it.setDisplayName("${type.color}$humanName")
+					it.setDisplayName("${type.color}$humanName [${type.humanName}]")
 					it.lore = listOf(
-						"${ChatColor.GOLD}Type: ${type.color}${type.humanName}",
+						"",
 						"${ChatColor.GRAY}${ChatColor.BOLD}$lore"
 					)
 					it.isUnbreakable = true
 					it.addEnchant(Enchantment.DURABILITY, 3, true)
 				}
 			}
+	}
+
+	fun generateWithID(): ItemStack {
+		return generateItemStack().also { stack ->
+			stack.itemMeta = stack.itemMeta?.also {
+				it.persistentDataContainer.set(relicKey, PersistentDataType.INTEGER, this.ordinal)
+			}
+		}
 	}
 
 	open fun onInventoryRemove(player: Player) {}
