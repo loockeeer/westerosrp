@@ -8,6 +8,7 @@ import fr.westerosrp.game.Territory
 import fr.westerosrp.listeners.*
 import net.luckperms.api.LuckPerms
 import org.bukkit.Bukkit
+import org.bukkit.ChatColor
 import org.bukkit.plugin.java.JavaPlugin
 
 class WesterosRP : JavaPlugin() {
@@ -16,6 +17,8 @@ class WesterosRP : JavaPlugin() {
 	companion object {
 		lateinit var instance: WesterosRP
 			private set
+
+		val prefix = "${ChatColor.GRAY}${ChatColor.BOLD}WesterosRP |${ChatColor.RESET}"
 	}
 
 	override fun onEnable() {
