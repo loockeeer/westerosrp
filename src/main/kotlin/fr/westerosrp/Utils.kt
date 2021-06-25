@@ -2,6 +2,8 @@ package fr.westerosrp
 
 import fr.westerosrp.game.Month
 import fr.westerosrp.game.Team
+import net.md_5.bungee.api.ChatMessageType
+import net.md_5.bungee.api.chat.BaseComponent
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.entity.Player
@@ -50,3 +52,7 @@ fun scheduleMonthRoll(plugin: WesterosRP) {
 }
 
 fun boolToString(condition: Boolean) = if (condition) "${ChatColor.GREEN}✔" else "${ChatColor.RED}✖"
+
+fun sendActionBar(player: Player, message: BaseComponent) {
+	player.spigot().sendMessage(ChatMessageType.ACTION_BAR, message)
+}
