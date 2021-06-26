@@ -15,6 +15,8 @@ Once you have them, you can build it using the gradle script `build`
 
 ## Usage
 
+This plugin uses Spigot 1.17, but you can also use it with Paper 
+
 Also, the plugins depends on :
 ```
 WorldGuard
