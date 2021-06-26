@@ -8,10 +8,8 @@ import fr.westerosrp.game.Territory
 import fr.westerosrp.sendActionBar
 import net.md_5.bungee.api.chat.TextComponent
 import org.bukkit.Location
-import org.bukkit.entity.EntityType
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
-import org.bukkit.event.entity.EntityTeleportEvent
 import org.bukkit.event.player.PlayerMoveEvent
 import java.util.*
 
