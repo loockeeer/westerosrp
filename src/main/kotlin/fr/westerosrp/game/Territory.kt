@@ -21,6 +21,7 @@ import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.block.BlockPlaceEvent
 import org.bukkit.event.entity.CreatureSpawnEvent
+import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.player.PlayerMoveEvent
 import org.bukkit.event.vehicle.VehicleCreateEvent
 import java.util.*
@@ -156,7 +157,7 @@ enum class Territory(
 		TerritoryTypes.TEAM,
 		Team.BLUE,
 		"blue",
-		Location(Bukkit.getWorld("world")!!,0.0,0.0,0.0)
+		Location(Bukkit.getWorld("world")!!,-804.0,63.0,-499.0)
 	),
 	RED_TERRITORY(
 		"Territoire Rouge",
@@ -164,7 +165,7 @@ enum class Territory(
 		TerritoryTypes.TEAM,
 		Team.RED,
 		"red",
-		Location(Bukkit.getWorld("world")!!,0.0,0.0,0.0)
+		Location(Bukkit.getWorld("world")!!,398.0,65.0,1115.0)
 	),
 	GREEN_TERRITORY(
 		"Territoire Vert",
@@ -172,7 +173,7 @@ enum class Territory(
 		TerritoryTypes.TEAM,
 		Team.GREEN,
 		"green",
-		Location(Bukkit.getWorld("world")!!,0.0,0.0,0.0)
+		Location(Bukkit.getWorld("world")!!,1165.0,71.0,-24.0)
 	);
 
 	var region: ProtectedRegion? = null
