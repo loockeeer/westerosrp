@@ -1,10 +1,8 @@
 package fr.westerosrp.command
 
 import fr.westerosrp.WesterosRP
-import org.bukkit.Bukkit
-import org.bukkit.Difficulty
-import org.bukkit.GameRule
-import org.bukkit.Statistic
+import fr.westerosrp.game.Team
+import org.bukkit.*
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
@@ -46,7 +44,8 @@ class Start : CommandExecutor, TabCompleter {
 			player.setStatistic(Statistic.PLAYER_KILLS, 0)
 			player.setStatistic(Statistic.DEATHS, 0)
 
-			//player.teleport(Location(overworld, 117.0, 75.0, 14.0))
+			val team = Team.getPlayerTeam(player)
+			if(team?.mainTerritory != null) player.teleport(team.mainTerritory.spawn)
 
 			player.server.advancementIterator().forEach { advancement ->
 				run {
@@ -61,6 +60,8 @@ class Start : CommandExecutor, TabCompleter {
 
 
 			//player.gameMode = GameMode.SURVIVAL
+
+			player.sendTitle("${ChatColor.GRAY}${ChatColor.BOLD}Westeros RP", "${ChatColor.GOLD}Bonne partie !", 10, 70, 20)
 		}
 
 		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "scoreboard players set @a SoulsMobs 0")
