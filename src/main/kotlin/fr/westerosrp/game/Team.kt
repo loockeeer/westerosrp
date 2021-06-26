@@ -13,11 +13,11 @@ private operator fun GroupManager.get(s: String): Group? {
 	return this.getGroup(s)
 }
 
-enum class Team(val humanName: String, val group: Group?, val color: ChatColor) {
-	ADMIN("Administrateur", LuckPermsProvider.get().groupManager["admin"], ChatColor.DARK_RED),
-	RED("Rouge", LuckPermsProvider.get().groupManager["rouge"], ChatColor.RED),
-	GREEN("Vert", LuckPermsProvider.get().groupManager["vert"], ChatColor.GREEN),
-	BLUE("Bleu", LuckPermsProvider.get().groupManager["bleu"], ChatColor.BLUE);
+enum class Team(val humanName: String, val group: Group?, val color: ChatColor, val mainTerritory: Territory?) {
+	ADMIN("Administrateur", LuckPermsProvider.get().groupManager["admin"], ChatColor.DARK_RED, null),
+	RED("Rouge", LuckPermsProvider.get().groupManager["rouge"], ChatColor.RED, Territory.RED_TERRITORY),
+	GREEN("Vert", LuckPermsProvider.get().groupManager["vert"], ChatColor.GREEN, Territory.GREEN_TERRITORY),
+	BLUE("Bleu", LuckPermsProvider.get().groupManager["bleu"], ChatColor.BLUE, Territory.BLUE_TERRITORY);
 
 	fun initialize() {
 		if (!this.isCorrect()) {
