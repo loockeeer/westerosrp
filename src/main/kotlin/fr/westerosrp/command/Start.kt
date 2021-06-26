@@ -45,7 +45,7 @@ class Start : CommandExecutor, TabCompleter {
 			player.setStatistic(Statistic.DEATHS, 0)
 
 			val team = Team.getPlayerTeam(player)
-			if(team?.mainTerritory != null) player.teleport(team.mainTerritory.spawn)
+			if (team?.mainTerritory != null) player.teleport(team.mainTerritory.spawn)
 
 			player.server.advancementIterator().forEach { advancement ->
 				run {
@@ -61,7 +61,13 @@ class Start : CommandExecutor, TabCompleter {
 
 			//player.gameMode = GameMode.SURVIVAL
 
-			player.sendTitle("${ChatColor.GRAY}${ChatColor.BOLD}Westeros RP", "${ChatColor.GOLD}Bonne partie !", 10, 70, 20)
+			player.sendTitle(
+				"${ChatColor.GRAY}${ChatColor.BOLD}Westeros RP",
+				"${ChatColor.GOLD}Bonne partie !",
+				10,
+				70,
+				20
+			)
 		}
 
 		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "scoreboard players set @a SoulsMobs 0")

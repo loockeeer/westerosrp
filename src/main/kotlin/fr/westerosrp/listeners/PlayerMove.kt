@@ -21,14 +21,14 @@ class PlayerMove : Listener {
 
 	@EventHandler
 	fun playerMove(e: PlayerMoveEvent) {
-		if(e.to?.x == e.from.x && e.to?.y == e.from.y) return
+		if (e.to?.x == e.from.x && e.to?.y == e.from.y) return
 		Territory.values().filter(Territory::isCorrect).forEach {
 			val checkTo = checkPosition(it.region!!, e.to!!)
 			val checkFrom = checkPosition(it.region!!, e.from)
 			if (checkTo && !checkFrom) {
 				if (it.entered.containsKey(e.player.uniqueId)) return
 				it.entered[e.player.uniqueId] = Calendar.getInstance(TimeZone.getTimeZone("Europe/Paris")).timeInMillis
-				sendActionBar(e.player, TextComponent(it.enter(e)) )
+				sendActionBar(e.player, TextComponent(it.enter(e)))
 			} else if (!checkTo && checkFrom) {
 				if (!it.entered.containsKey(e.player.uniqueId)) return
 				sendActionBar(e.player, TextComponent(it.leave(e)))

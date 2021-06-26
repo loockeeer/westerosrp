@@ -3,27 +3,17 @@ package fr.westerosrp.game
 
 import com.sk89q.worldedit.bukkit.BukkitAdapter
 import com.sk89q.worldedit.math.BlockVector2
-import com.sk89q.worldedit.world.weather.WeatherType
 import com.sk89q.worldguard.WorldGuard
-import com.sk89q.worldguard.bukkit.event.entity.SpawnEntityEvent
 import com.sk89q.worldguard.protection.flags.Flags
 import com.sk89q.worldguard.protection.flags.StateFlag
 import com.sk89q.worldguard.protection.regions.ProtectedRegion
 import fr.westerosrp.WesterosRP
 import fr.westerosrp.database.TerritoryTypes
-import fr.westerosrp.listeners.PlayerMove
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.Location
-import org.bukkit.entity.Player
-import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
-import org.bukkit.event.block.BlockBreakEvent
-import org.bukkit.event.block.BlockPlaceEvent
-import org.bukkit.event.entity.CreatureSpawnEvent
-import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.player.PlayerMoveEvent
-import org.bukkit.event.vehicle.VehicleCreateEvent
 import java.util.*
 
 
@@ -36,10 +26,17 @@ enum class Territory(
 	val spawn: Location
 ) {
 
-	ARENA("Arène PvP", ChatColor.GRAY, TerritoryTypes.SPECIAL, null, "arena", Location(Bukkit.getWorld("world")!!,0.0,0.0,0.0)) {
+	ARENA(
+		"Arène PvP",
+		ChatColor.GRAY,
+		TerritoryTypes.SPECIAL,
+		null,
+		"arena",
+		Location(Bukkit.getWorld("world")!!, 0.0, 0.0, 0.0)
+	) {
 		override fun initialize() {
 			super.initialize()
-			if(isCorrect()) {
+			if (isCorrect()) {
 				region?.let {
 					it.setFlag(Flags.INTERACT, StateFlag.State.DENY)
 					it.setFlag(Flags.USE, StateFlag.State.DENY)
@@ -56,12 +53,19 @@ enum class Territory(
 		}
 
 		override fun enter(e: PlayerMoveEvent): String {
-			return super.enter(e)+" Il y a actuellement ${ChatColor.GRAY}${entered.size-1}${ChatColor.GOLD} preux guerrier${if(entered.size>2) "s" else ""} dans la zone !"
+			return super.enter(e) + " Il y a actuellement ${ChatColor.GRAY}${entered.size - 1}${ChatColor.GOLD} preux guerrier${if (entered.size > 2) "s" else ""} dans la zone !"
 		}
 	},
 
 
-	LARGE_SPAWN("Contrées du Spawn", ChatColor.GRAY, TerritoryTypes.SPAWN, null, "large_spawn", Location(Bukkit.getWorld("world")!!,0.0,0.0,0.0)) {
+	LARGE_SPAWN(
+		"Contrées du Spawn",
+		ChatColor.GRAY,
+		TerritoryTypes.SPAWN,
+		null,
+		"large_spawn",
+		Location(Bukkit.getWorld("world")!!, 0.0, 0.0, 0.0)
+	) {
 		override fun initialize() {
 			super.initialize()
 			if (isCorrect()) {
@@ -86,7 +90,14 @@ enum class Territory(
 		}
 	},
 
-	INNER_SPAWN("Enceinte du château du Spawn", ChatColor.GRAY, TerritoryTypes.SPAWN, null, "inner_spawn", Location(Bukkit.getWorld("world")!!,117.0,75.0,16.0)) {
+	INNER_SPAWN(
+		"Enceinte du château du Spawn",
+		ChatColor.GRAY,
+		TerritoryTypes.SPAWN,
+		null,
+		"inner_spawn",
+		Location(Bukkit.getWorld("world")!!, 117.0, 75.0, 16.0)
+	) {
 		override fun initialize() {
 			super.initialize()
 			if (isCorrect()) {
@@ -100,8 +111,8 @@ enum class Territory(
 		}
 
 		override fun leave(e: PlayerMoveEvent): String {
-			if(!WesterosRP.instance.running) {
-				if(!e.player.isOp || Team.getPlayerTeam(e.player)?.equals(Team.ADMIN) != true) {
+			if (!WesterosRP.instance.running) {
+				if (!e.player.isOp || Team.getPlayerTeam(e.player)?.equals(Team.ADMIN) != true) {
 					e.setTo(spawn)
 					return "${ChatColor.RED}${ChatColor.BOLD}La partie n'a pas encore commencée !"
 				}
@@ -118,7 +129,7 @@ enum class Territory(
 		TerritoryTypes.SPAWN,
 		null,
 		"danger_spawn",
-		Location(Bukkit.getWorld("world")!!,0.0,0.0,0.0)
+		Location(Bukkit.getWorld("world")!!, 0.0, 0.0, 0.0)
 	) {
 		override fun initialize() {
 			super.initialize()
@@ -157,7 +168,7 @@ enum class Territory(
 		TerritoryTypes.TEAM,
 		Team.BLUE,
 		"blue",
-		Location(Bukkit.getWorld("world")!!,-804.0,63.0,-499.0)
+		Location(Bukkit.getWorld("world")!!, -804.0, 63.0, -499.0)
 	),
 	RED_TERRITORY(
 		"Territoire Rouge",
@@ -165,7 +176,7 @@ enum class Territory(
 		TerritoryTypes.TEAM,
 		Team.RED,
 		"red",
-		Location(Bukkit.getWorld("world")!!,398.0,65.0,1115.0)
+		Location(Bukkit.getWorld("world")!!, 398.0, 65.0, 1115.0)
 	),
 	GREEN_TERRITORY(
 		"Territoire Vert",
@@ -173,7 +184,7 @@ enum class Territory(
 		TerritoryTypes.TEAM,
 		Team.GREEN,
 		"green",
-		Location(Bukkit.getWorld("world")!!,1165.0,71.0,-24.0)
+		Location(Bukkit.getWorld("world")!!, 1165.0, 71.0, -24.0)
 	);
 
 	var region: ProtectedRegion? = null
@@ -205,7 +216,5 @@ enum class Territory(
 
 	fun contains(loc: Location) = region?.contains(BlockVector2.at(loc.x, loc.z))
 
-	open inner class Listeners : Listener {
-
-	}
+	open inner class Listeners : Listener
 }

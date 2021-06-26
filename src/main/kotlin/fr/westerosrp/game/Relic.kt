@@ -189,7 +189,12 @@ enum class Relic(val humanName: String, val lore: String, val type: RelicType, v
 		}
 	},
 
-	FRAGMENT_GREEN("Valshamr", "Une relique spéciale renfermant un pouvoir immense", RelicType.FRAGMENT, Material.RAW_GOLD) {
+	FRAGMENT_GREEN(
+		"Valshamr",
+		"Une relique spéciale renfermant un pouvoir immense",
+		RelicType.FRAGMENT,
+		Material.RAW_GOLD
+	) {
 		override fun generateItemStack(): ItemStack {
 			return super.generateItemStack().also { stack ->
 				stack.itemMeta = stack.itemMeta?.also {
@@ -198,7 +203,12 @@ enum class Relic(val humanName: String, val lore: String, val type: RelicType, v
 			}
 		}
 	},
-	FRAGMENT_RED("Skidbladnir", "Une relique spéciale renfermant un pouvoir immense", RelicType.FRAGMENT, Material.NETHERITE_SCRAP) {
+	FRAGMENT_RED(
+		"Skidbladnir",
+		"Une relique spéciale renfermant un pouvoir immense",
+		RelicType.FRAGMENT,
+		Material.NETHERITE_SCRAP
+	) {
 		override fun generateItemStack(): ItemStack {
 			return super.generateItemStack().also { stack ->
 				stack.itemMeta = stack.itemMeta?.also {
@@ -207,7 +217,12 @@ enum class Relic(val humanName: String, val lore: String, val type: RelicType, v
 			}
 		}
 	},
-	FRAGMENT_BLUE("Naglfar", "Une relique spéciale renfermant un pouvoir immense", RelicType.FRAGMENT, Material.PRISMARINE_CRYSTALS) {
+	FRAGMENT_BLUE(
+		"Naglfar",
+		"Une relique spéciale renfermant un pouvoir immense",
+		RelicType.FRAGMENT,
+		Material.PRISMARINE_CRYSTALS
+	) {
 		override fun generateItemStack(): ItemStack {
 			return super.generateItemStack().also { stack ->
 				stack.itemMeta = stack.itemMeta?.also {

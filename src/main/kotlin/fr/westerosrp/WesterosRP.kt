@@ -82,7 +82,7 @@ class WesterosRP : JavaPlugin() {
 			}
 		}, 0L, 20L)
 
-		if(running) {
+		if (running) {
 			scheduleMonthRoll(this)
 		}
 
