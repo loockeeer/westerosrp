@@ -7,7 +7,6 @@ import org.bukkit.attribute.AttributeModifier
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.Player
 import org.bukkit.inventory.EquipmentSlot
-import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.InventoryHolder
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.Repairable
@@ -24,7 +23,13 @@ enum class RelicType(val humanName: String, val color: ChatColor) {
 	FRAGMENT("Fragment", ChatColor.GRAY)
 }
 
-enum class Relic(val humanName: String, val lore: String, val type: RelicType, val material: Material, val spawn: List<Location>) {
+enum class Relic(
+	val humanName: String,
+	val lore: String,
+	val type: RelicType,
+	val material: Material,
+	val spawn: List<Location>
+) {
 	WATER_SPEED_ARTIFACT(
 		"Water Speed",
 		"Confère des effets propices à l'exploration maraine",
@@ -55,7 +60,13 @@ enum class Relic(val humanName: String, val lore: String, val type: RelicType, v
 			player.removePotionEffect(PotionEffectType.FAST_DIGGING)
 		}
 	},
-	JUMP_ARTIFACT("High Jump", "Permet de sauter plus haut", RelicType.RARE, Material.RABBIT_FOOT, listOf(Location(Bukkit.getWorld("world")!!, 0.0, 0.0, 0.0))) {
+	JUMP_ARTIFACT(
+		"High Jump",
+		"Permet de sauter plus haut",
+		RelicType.RARE,
+		Material.RABBIT_FOOT,
+		listOf(Location(Bukkit.getWorld("world")!!, 0.0, 0.0, 0.0))
+	) {
 		override fun onInventoryAdd(player: Player) {
 			player.addPotionEffect(PotionEffectType.JUMP.createEffect(-1, 1))
 		}
@@ -79,7 +90,13 @@ enum class Relic(val humanName: String, val lore: String, val type: RelicType, v
 			player.removePotionEffect(PotionEffectType.REGENERATION)
 		}
 	},
-	LUCK_ARTIFACT("Luck", "Porte bonheur", RelicType.RARE, Material.SCUTE, listOf(Location(Bukkit.getWorld("world")!!, 0.0, 0.0, 0.0))) {
+	LUCK_ARTIFACT(
+		"Luck",
+		"Porte bonheur",
+		RelicType.RARE,
+		Material.SCUTE,
+		listOf(Location(Bukkit.getWorld("world")!!, 0.0, 0.0, 0.0))
+	) {
 		override fun onInventoryAdd(player: Player) {
 			player.addPotionEffect(PotionEffectType.LUCK.createEffect(-1, 3))
 		}
@@ -90,7 +107,13 @@ enum class Relic(val humanName: String, val lore: String, val type: RelicType, v
 	},
 
 
-	LOOTING_SWORD("Looting sword", "Double vos récompenses", RelicType.RARE, Material.IRON_SWORD, listOf(Location(Bukkit.getWorld("world")!!, 0.0, 0.0, 0.0))) {
+	LOOTING_SWORD(
+		"Looting sword",
+		"Double vos récompenses",
+		RelicType.RARE,
+		Material.IRON_SWORD,
+		listOf(Location(Bukkit.getWorld("world")!!, 0.0, 0.0, 0.0))
+	) {
 		override fun generateItemStack(): ItemStack {
 			return super.generateItemStack().also { stack ->
 				stack.itemMeta = stack.itemMeta?.also {
@@ -101,7 +124,13 @@ enum class Relic(val humanName: String, val lore: String, val type: RelicType, v
 		}
 	},
 
-	FIRE_SWORD("Fire sword", "Brûle vos ennemis jusqu'à la mort", RelicType.RARE, Material.IRON_SWORD, listOf(Location(Bukkit.getWorld("world")!!, 0.0, 0.0, 0.0))) {
+	FIRE_SWORD(
+		"Fire sword",
+		"Brûle vos ennemis jusqu'à la mort",
+		RelicType.RARE,
+		Material.IRON_SWORD,
+		listOf(Location(Bukkit.getWorld("world")!!, 0.0, 0.0, 0.0))
+	) {
 		override fun generateItemStack(): ItemStack {
 			return super.generateItemStack().also { stack ->
 				stack.itemMeta = stack.itemMeta?.also {
@@ -112,7 +141,13 @@ enum class Relic(val humanName: String, val lore: String, val type: RelicType, v
 		}
 	},
 
-	KNOCKBACK_SWORD("Knockback sword", "Repousse vos ennemis", RelicType.RARE, Material.IRON_SWORD, listOf(Location(Bukkit.getWorld("world")!!, 0.0, 0.0, 0.0))) {
+	KNOCKBACK_SWORD(
+		"Knockback sword",
+		"Repousse vos ennemis",
+		RelicType.RARE,
+		Material.IRON_SWORD,
+		listOf(Location(Bukkit.getWorld("world")!!, 0.0, 0.0, 0.0))
+	) {
 		override fun generateItemStack(): ItemStack {
 			return super.generateItemStack().also { stack ->
 				stack.itemMeta = stack.itemMeta?.also {
@@ -124,7 +159,13 @@ enum class Relic(val humanName: String, val lore: String, val type: RelicType, v
 		}
 	},
 
-	MONSTER_SWORD("Monster sword", "Efficace contre les monstres", RelicType.RARE, Material.IRON_SWORD, listOf(Location(Bukkit.getWorld("world")!!, 0.0, 0.0, 0.0))) {
+	MONSTER_SWORD(
+		"Monster sword",
+		"Efficace contre les monstres",
+		RelicType.RARE,
+		Material.IRON_SWORD,
+		listOf(Location(Bukkit.getWorld("world")!!, 0.0, 0.0, 0.0))
+	) {
 		override fun generateItemStack(): ItemStack {
 			return super.generateItemStack().also { stack ->
 				stack.itemMeta = stack.itemMeta?.also {
@@ -136,7 +177,13 @@ enum class Relic(val humanName: String, val lore: String, val type: RelicType, v
 		}
 	},
 
-	PERFECT_ROD("Perfect rod", "La canne à pêche parfaite", RelicType.RARE, Material.FISHING_ROD, listOf(Location(Bukkit.getWorld("world")!!, 0.0, 0.0, 0.0))) {
+	PERFECT_ROD(
+		"Perfect rod",
+		"La canne à pêche parfaite",
+		RelicType.RARE,
+		Material.FISHING_ROD,
+		listOf(Location(Bukkit.getWorld("world")!!, 0.0, 0.0, 0.0))
+	) {
 		override fun generateItemStack(): ItemStack {
 			return super.generateItemStack().also { stack ->
 				stack.itemMeta = stack.itemMeta?.also {
@@ -148,7 +195,13 @@ enum class Relic(val humanName: String, val lore: String, val type: RelicType, v
 		}
 	},
 
-	FAST_PICKAXE("Fast pickaxe", "Cooble breaker", RelicType.RARE, Material.STONE_PICKAXE, listOf(Location(Bukkit.getWorld("world")!!, 0.0, 0.0, 0.0))) {
+	FAST_PICKAXE(
+		"Fast pickaxe",
+		"Cooble breaker",
+		RelicType.RARE,
+		Material.STONE_PICKAXE,
+		listOf(Location(Bukkit.getWorld("world")!!, 0.0, 0.0, 0.0))
+	) {
 		override fun generateItemStack(): ItemStack {
 			return super.generateItemStack().also { stack ->
 
@@ -162,7 +215,13 @@ enum class Relic(val humanName: String, val lore: String, val type: RelicType, v
 		}
 	},
 
-	SHARP_AXE("Sharp axe", "Super tranchante", RelicType.RARE, Material.DIAMOND_AXE, listOf(Location(Bukkit.getWorld("world")!!, 0.0, 0.0, 0.0))) {
+	SHARP_AXE(
+		"Sharp axe",
+		"Super tranchante",
+		RelicType.RARE,
+		Material.DIAMOND_AXE,
+		listOf(Location(Bukkit.getWorld("world")!!, 0.0, 0.0, 0.0))
+	) {
 		override fun generateItemStack(): ItemStack {
 			return super.generateItemStack().also { stack ->
 				stack.itemMeta = stack.itemMeta?.also { meta ->
@@ -269,7 +328,7 @@ enum class Relic(val humanName: String, val lore: String, val type: RelicType, v
 
 	fun spawnRelic() {
 		val selectedSpawn = spawn.random()
-		if(selectedSpawn.block !is InventoryHolder) {
+		if (selectedSpawn.block !is InventoryHolder) {
 			selectedSpawn.block.type = Material.CHEST
 		}
 		(selectedSpawn.block as InventoryHolder).inventory.addItem(generateWithID())
