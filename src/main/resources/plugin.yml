@@ -5,7 +5,7 @@ description: Plugin pour gérer une partie de WesterosRP
 api-version: 1.17
 load: POSTWORLD
 author: loockeeer
-depend: [ WorldEdit, WorldGuard, LuckPerms ]
+depend: [ WorldEdit, WorldGuard, LuckPerms, ProtocolLib ]
 prefix: WesterosRP
 commands:
   winvsee:
