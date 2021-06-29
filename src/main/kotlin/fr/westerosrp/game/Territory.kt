@@ -76,7 +76,7 @@ enum class Territory(
 					it.playSound(it.location, Sound.BLOCK_ANVIL_LAND, SoundCategory.MASTER, 100.0f, 1.0f)
 				}
 			}
-			return super.enter(e)
+			return super.leave(e)
 		}
 
 		inner class Listeners : Listener, Territory.Listeners() {
