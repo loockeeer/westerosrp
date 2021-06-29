@@ -1,8 +1,10 @@
-package fr.westerosrp.game
+package fr.westerosrp.utils
 
 import fr.mrmicky.fastboard.FastBoard
 import fr.westerosrp.WesterosRP
 import fr.westerosrp.boolToString
+import fr.westerosrp.game.Month
+import fr.westerosrp.game.Team
 import fr.westerosrp.timeUntilMidnight
 import org.apache.commons.lang.time.DurationFormatUtils
 import org.bukkit.ChatColor
@@ -15,7 +17,7 @@ object Scoreboard {
 	private val board = HashMap<UUID, FastBoard>()
 	private val boardTrigger = HashMap<UUID, Boolean>()
 
-	fun triggerBoard(player: Player) = triggerBoard(player, !(boardTrigger[player.uniqueId] ?: false))
+	fun triggerBoard(player: Player) = triggerBoard(player, !(boardTrigger[player.uniqueId] ?: true))
 
 	fun triggerBoard(player: Player, state: Boolean): Boolean {
 		boardTrigger[player.uniqueId] = state
@@ -25,10 +27,10 @@ object Scoreboard {
 		return state
 	}
 
-	private fun generateBoard(player: Player) = FastBoard(player).also { this.board[player.uniqueId] = it }
+	private fun generateBoard(player: Player) = FastBoard(player).also { board[player.uniqueId] = it }
 
 
-	fun removeBoard(player: Player) = this.board.remove(player.uniqueId).also { it?.delete() }
+	fun removeBoard(player: Player) = board.remove(player.uniqueId).also { it?.delete() }
 
 	fun updateBoard(player: Player) =
 		if (boardTrigger[player.uniqueId] != false) updateBoard(getBoard(player)) else null
@@ -56,6 +58,6 @@ object Scoreboard {
 		return board
 	}
 
-	private fun getBoard(player: Player) = this.board[player.uniqueId] ?: generateBoard(player)
+	private fun getBoard(player: Player) = board[player.uniqueId] ?: generateBoard(player)
 
 }
