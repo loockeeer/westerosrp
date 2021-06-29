@@ -1,6 +1,7 @@
 package fr.westerosrp.game
 
 import fr.westerosrp.WesterosRP
+import fr.westerosrp.utils.Scoreboard
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.entity.Player
@@ -67,16 +68,16 @@ enum class Month(val message: String) {
 		}
 
 		fun rollMonth() {
-			Bukkit.broadcastMessage("${ChatColor.GOLD}Fin du mois ${ChatColor.GRAY}${currentMonth - 1}${ChatColor.GOLD} !")
+			Bukkit.broadcastMessage("${WesterosRP.prefix}${ChatColor.GOLD} Fin du mois ${ChatColor.GRAY}${currentMonth - 1}${ChatColor.GOLD} !")
 
 			values().filter { it.isMonth(currentMonth) }.forEach { modifier ->
 				modifier.messageInhibitor(Bukkit.getOnlinePlayers()).forEach {
-					it.sendMessage("${ChatColor.GOLD}${modifier.message}")
+					it.sendMessage("${WesterosRP.prefix}${ChatColor.GOLD} ${modifier.message}")
 				}
 				modifier.execute(currentMonth)
 			}
 
-			Bukkit.broadcastMessage("${ChatColor.GOLD}Début du mois ${ChatColor.GRAY}${currentMonth}${ChatColor.GOLD} !")
+			Bukkit.broadcastMessage("${WesterosRP.prefix}${ChatColor.GOLD} Début du mois ${ChatColor.GRAY}${currentMonth}${ChatColor.GOLD} !")
 
 			Bukkit.getOnlinePlayers().forEach(Scoreboard::updateBoard)
 		}
