@@ -12,7 +12,10 @@ import org.bukkit.Location
 import org.bukkit.block.Biome
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
+import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerMoveEvent
+import org.bukkit.event.player.PlayerQuitEvent
+import org.bukkit.event.player.PlayerTeleportEvent
 import java.util.*
 
 
@@ -35,6 +38,29 @@ class PlayerMove : Listener {
 			} else if (!checkTo && checkFrom) {
 				if (!it.entered.containsKey(e.player.uniqueId)) return
 				sendActionBar(e.player, TextComponent(it.leave(e)))
+			}
+		}
+	}
+
+	@EventHandler
+	fun playerTeleport(e: PlayerTeleportEvent) {
+		playerMove(PlayerMoveEvent(e.player, e.from, e.to))
+	}
+
+	@EventHandler
+	fun playerQuit(e: PlayerQuitEvent) {
+		Territory.values().forEach {
+			it.entered.remove(e.player.uniqueId)
+		}
+	}
+
+	@EventHandler
+	fun playerJoin(e: PlayerJoinEvent) {
+		Territory.values().filter(Territory::isCorrect).forEach {
+			val checkPosition = checkPosition(it.region!!, e.player.location)
+			if (checkPosition) {
+				if (it.entered.containsKey(e.player.uniqueId)) return
+				it.entered[e.player.uniqueId] = currentTime
 			}
 		}
 	}

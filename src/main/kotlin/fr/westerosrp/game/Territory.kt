@@ -59,7 +59,7 @@ enum class Territory(
 
 		override fun enter(e: PlayerMoveEvent): String {
 			bossBar.addPlayer(e.player)
-			bossBar.setTitle("${entered.size} joueur${if(entered.size>1)"s" else ""}")
+			bossBar.setTitle("${entered.size-1} joueur${if(entered.size>1)"s" else ""}")
 			entered.forEach { entry ->
 				Bukkit.getPlayer(entry.key)?.let {
 					it.playSound(it.location, Sound.BLOCK_ANVIL_LAND, SoundCategory.MASTER, 100.0f, 1.0f)
