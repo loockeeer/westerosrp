@@ -89,6 +89,11 @@ enum class Territory(
 			override fun playerInteract(e: PlayerInteractEvent) {
 				e.isCancelled = false
 			}
+
+			@EventHandler(priority = EventPriority.HIGHEST)
+			fun playerDamage(e: EntityDamageEvent) {
+				e.isCancelled = false
+			}
 		}
 	},
 
@@ -127,6 +132,11 @@ enum class Territory(
 			}
 		}
 
+		@EventHandler(priority = EventPriority.HIGHEST)
+		fun playerDamage(e: EntityDamageEvent) {
+			e.isCancelled = true
+		}
+
 		inner class Listeners : Listener, Territory.Listeners() {
 			fun playerDamage(e: EntityDamageEvent) {
 				e.isCancelled = true
@@ -146,12 +156,6 @@ enum class Territory(
 	) {
 		override fun initialize() {
 			super.initialize()
-			if (isCorrect) {
-				region?.let {
-					it.setFlag(Flags.MOB_DAMAGE, StateFlag.State.ALLOW)
-					it.setFlag(Flags.PVP, StateFlag.State.ALLOW)
-				}
-			}
 		}
 
 		override fun enter(e: PlayerMoveEvent): String {

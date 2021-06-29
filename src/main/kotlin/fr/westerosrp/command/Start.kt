@@ -32,7 +32,7 @@ class Start : CommandExecutor, TabCompleter {
 			}
 		}
 
-		val overworld = sender.server.worlds.find { it.name == "world" }
+		val overworld = Bukkit.getWorld("world")
 
 		Bukkit.getOnlinePlayers().forEach { player ->
 			player.inventory.clear()
