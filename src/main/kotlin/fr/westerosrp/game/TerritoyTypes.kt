@@ -4,6 +4,6 @@ enum class TerritoryTypes {
 	TEAM,
 	VILLAGER,
 	SPAWN,
-	BARBARIAN,
+	DUNGEON,
 	SPECIAL
 }
