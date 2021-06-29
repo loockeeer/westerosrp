@@ -1,6 +1,8 @@
 package fr.westerosrp.command
 
 import fr.westerosrp.game.Relic
+import fr.westerosrp.sendErrorMessage
+import fr.westerosrp.sendInfoMessage
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.command.Command
@@ -11,7 +13,7 @@ import org.bukkit.entity.Player
 class RelicList : CommandExecutor {
 	override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
 		if (sender !is Player) {
-			sender.sendMessage("${ChatColor.GOLD}Tu n'es pas un joueur !")
+			sender.sendErrorMessage("Vous devez être un joueur pour faire cela !")
 			return true
 		}
 
@@ -21,6 +23,7 @@ class RelicList : CommandExecutor {
 		}
 
 		sender.openInventory(listInventory)
+		sender.sendInfoMessage("Ouverture du menu des reliques")
 		return true
 	}
 }
