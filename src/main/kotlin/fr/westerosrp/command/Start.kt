@@ -44,7 +44,7 @@ class Start : CommandExecutor, TabCompleter {
 			player.setStatistic(Statistic.PLAYER_KILLS, 0)
 			player.setStatistic(Statistic.DEATHS, 0)
 
-			val team = Team.getPlayerTeam(player)
+			val team = Team.getPlayerTeam(player, true)
 			if (team?.mainTerritory != null) player.teleport(team.mainTerritory.spawn)
 
 			player.server.advancementIterator().forEach { advancement ->

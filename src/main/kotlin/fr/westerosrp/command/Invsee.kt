@@ -1,5 +1,7 @@
 package fr.westerosrp.command
 
+import fr.westerosrp.sendErrorMessage
+import fr.westerosrp.sendInfoMessage
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.command.Command
@@ -11,26 +13,28 @@ import org.bukkit.entity.Player
 class Invsee : CommandExecutor, TabCompleter {
 	override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
 		if (sender !is Player) {
-			sender.sendMessage("${ChatColor.GOLD}Tu n'es pas un joueur !")
+			sender.sendErrorMessage("Vous devez être un joueur pour faire cela !")
 			return true
 		}
 
-		if (!sender.hasPermission("westerosrp.admin")) {
-			sender.sendMessage("${ChatColor.RED}Tu n'as pas la permission nécessaire pour utiliser cette commande !")
+		if (args.isEmpty()) {
+			sender.sendErrorMessage("Un argument est requis : ${ChatColor.GRAY}joueur")
 			return true
 		}
 
-		if (args.isEmpty()) return false
-
-		val target = Bukkit.getPlayer(args[0]) ?: return false
+		val target = Bukkit.getPlayer(args[0])
+		if(target == null) {
+			sender.sendErrorMessage("L'argument ${ChatColor.GRAY}joueur${ChatColor.RED} est incorrect")
+			return true
+		}
 
 		if (target.uniqueId == sender.uniqueId) {
-			sender.sendMessage("${ChatColor.RED}Vous ne pouvez pas faire cette commande sur vous même !")
+			sender.sendErrorMessage("Vous ne pouvez pas faire cette commande sur vous même !")
 			return true
 		}
 
 		sender.openInventory(target.inventory)
-
+		sender.sendInfoMessage("Ouverture de l'inventaire de ${target.displayName}")
 		return true
 	}
 
