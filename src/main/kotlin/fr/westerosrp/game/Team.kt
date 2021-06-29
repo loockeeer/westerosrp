@@ -26,15 +26,18 @@ enum class Team(val humanName: String, val group: Group?, val color: ChatColor, 
 	}
 
 	companion object {
-		fun getPlayerTeam(player: Player): Team? {
+		fun getPlayerTeam(player: Player, notAdmin: Boolean): Team? {
 			val user = LuckPermsProvider.get().userManager.getUser(player.uniqueId)
-			return Team.values().find {
-				it.group?.name == user?.getInheritedGroups(user.queryOptions)?.stream()
+			return Team.values().find { team ->
+				team.group?.name == user?.getInheritedGroups(user.queryOptions)?.stream()
+					?.filter { if(notAdmin) !it.nodes.contains(Node.builder("westerosrp.admin").build()) else true }
 					?.sorted { a, b -> b.weight.orElse(0) - a.weight.orElse(0) }
 					?.findFirst()
 					?.orElse(null)?.name
 			}
 		}
+
+		fun getPlayerTeam(player: Player) = getPlayerTeam(player, false)
 	}
 
 	fun isAdmin() = group?.nodes?.contains(Node.builder("westerosrp.admin").build()) == true
