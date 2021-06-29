@@ -1,6 +1,6 @@
 package fr.westerosrp.listeners
 
-import fr.westerosrp.game.Scoreboard
+import fr.westerosrp.utils.Scoreboard
 import fr.westerosrp.game.Team
 import org.bukkit.ChatColor
 import org.bukkit.event.EventHandler
