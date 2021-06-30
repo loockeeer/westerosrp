@@ -4,8 +4,10 @@ import fr.westerosrp.WesterosRP
 import org.bukkit.*
 import org.bukkit.attribute.Attribute
 import org.bukkit.attribute.AttributeModifier
+import org.bukkit.block.Container
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.Player
+import org.bukkit.inventory.BlockInventoryHolder
 import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.InventoryHolder
 import org.bukkit.inventory.ItemStack
@@ -23,12 +25,16 @@ enum class RelicType(val humanName: String, val color: ChatColor) {
 	FRAGMENT("Fragment", ChatColor.GRAY)
 }
 
+val casinoLocations: List<Location> = listOf(Location(Bukkit.getWorld("world")!!, 0.0, 0.0, 0.0))
+val dungeonLocations: List<Location> = listOf(Location(Bukkit.getWorld("world")!!, 0.0, 0.0, 0.0))
+
 enum class Relic(
 	val humanName: String,
 	val lore: String,
 	val type: RelicType,
 	val material: Material,
-	val spawn: List<Location>
+	val spawn: List<Location> = casinoLocations,
+	val respawn: List<Location> = dungeonLocations
 ) {
 	WATER_SPEED_ARTIFACT(
 		"Water Speed",
@@ -256,6 +262,7 @@ enum class Relic(
 		"Une relique spéciale renfermant un pouvoir immense",
 		RelicType.FRAGMENT,
 		Material.RAW_GOLD,
+		listOf(Location(Bukkit.getWorld("world")!!, 0.0, 0.0, 0.0)),
 		listOf(Location(Bukkit.getWorld("world")!!, 0.0, 0.0, 0.0))
 	) {
 		override fun generateItemStack(): ItemStack {
@@ -271,8 +278,9 @@ enum class Relic(
 		"Une relique spéciale renfermant un pouvoir immense",
 		RelicType.FRAGMENT,
 		Material.NETHERITE_SCRAP,
+		listOf(Location(Bukkit.getWorld("world")!!, 0.0, 0.0, 0.0)),
 		listOf(Location(Bukkit.getWorld("world")!!, 0.0, 0.0, 0.0))
-	) {
+		) {
 		override fun generateItemStack(): ItemStack {
 			return super.generateItemStack().also { stack ->
 				stack.itemMeta = stack.itemMeta?.also {
@@ -286,6 +294,7 @@ enum class Relic(
 		"Une relique spéciale renfermant un pouvoir immense",
 		RelicType.FRAGMENT,
 		Material.PRISMARINE_CRYSTALS,
+		listOf(Location(Bukkit.getWorld("world")!!, 0.0, 0.0, 0.0)),
 		listOf(Location(Bukkit.getWorld("world")!!, 0.0, 0.0, 0.0))
 	) {
 		override fun generateItemStack(): ItemStack {
@@ -326,12 +335,20 @@ enum class Relic(
 		}
 	}
 
-	fun spawnRelic() {
-		val selectedSpawn = spawn.random()
-		if (selectedSpawn.block !is InventoryHolder) {
-			selectedSpawn.block.type = Material.CHEST
+	private fun spawn(loc: Location) {
+		if (loc.block.state !is BlockInventoryHolder) {
+			loc.block.type = Material.CHEST
 		}
-		(selectedSpawn.block as InventoryHolder).inventory.addItem(generateWithID())
+		(loc.block.state as BlockInventoryHolder).inventory.addItem(generateWithID())
+	}
+
+	fun spawn() {
+		spawn(spawn.random())
+	}
+
+	fun respawn() {
+		Bukkit.broadcastMessage("${WesterosRP.prefix}${ChatColor.GOLD} La relique ${ChatColor.GRAY}${humanName}${ChatColor.GOLD} a respawn !")
+		spawn(respawn.random())
 	}
 
 	open fun onInventoryRemove(player: Player) {}
