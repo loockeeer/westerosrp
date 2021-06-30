@@ -8,11 +8,9 @@ import com.sk89q.worldguard.protection.flags.Flags
 import com.sk89q.worldguard.protection.flags.StateFlag
 import com.sk89q.worldguard.protection.regions.ProtectedRegion
 import fr.westerosrp.*
-import fr.westerosrp.database.TerritoryTypes
 import org.bukkit.*
 import org.bukkit.boss.BarColor
 import org.bukkit.boss.BarStyle
-import org.bukkit.boss.BossBar
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
 import org.bukkit.entity.Zombie
@@ -22,17 +20,21 @@ import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.block.BlockExplodeEvent
 import org.bukkit.event.block.BlockPlaceEvent
-import org.bukkit.event.entity.CreatureSpawnEvent
-import org.bukkit.event.entity.EntityDamageEvent
-import org.bukkit.event.entity.EntityExplodeEvent
-import org.bukkit.event.player.PlayerInteractEvent
-import org.bukkit.event.player.PlayerMoveEvent
-import org.bukkit.event.player.PlayerTeleportEvent
+import org.bukkit.event.entity.*
+import org.bukkit.event.player.*
 import org.bukkit.event.vehicle.VehicleDamageEvent
 import org.bukkit.event.vehicle.VehicleDestroyEvent
+import org.bukkit.inventory.BlockInventoryHolder
 import org.bukkit.inventory.ItemStack
 import java.util.*
 
+enum class TerritoryTypes {
+	TEAM,
+	VILLAGER,
+	SPAWN,
+	DUNGEON,
+	SPECIAL
+}
 
 enum class Territory(
 	val humanName: String,
@@ -132,14 +134,13 @@ enum class Territory(
 			}
 		}
 
-		@EventHandler(priority = EventPriority.HIGHEST)
-		fun playerDamage(e: EntityDamageEvent) {
-			e.isCancelled = true
-		}
-
 		inner class Listeners : Listener, Territory.Listeners() {
+			@EventHandler(priority = EventPriority.HIGHEST)
 			fun playerDamage(e: EntityDamageEvent) {
+				if(!checkPosition(region!!, e.entity.location)) return
+				if(e.entity.type != EntityType.PLAYER) return
 				e.isCancelled = true
+				if(e is EntityDamageByEntityEvent && e.damager.type == EntityType.PLAYER) e.damager.sendCoolErrorMessage("Le ${ChatColor.GRAY}PvP${ChatColor.RED} est désactivé ici !")
 			}
 		}
 	},
@@ -239,23 +240,17 @@ enum class Territory(
 		get() = region != null
 
 	open fun enter(e: PlayerMoveEvent): String {
-		var baseText = "${ChatColor.GOLD}Vous entrez dans ${this.color}${this.humanName}${ChatColor.RESET}${ChatColor.GOLD}. Ici, le ${ChatColor.GRAY}PvP${ChatColor.GOLD} est ${
-			if (this.region?.getFlag(
-					Flags.PVP
-				) == StateFlag.State.ALLOW
-			) "${ChatColor.UNDERLINE}activé" else "${ChatColor.UNDERLINE}désactivé"
-		}${ChatColor.RESET}${ChatColor.GOLD}."
 		when(type) {
 			TerritoryTypes.VILLAGER -> {
 				spawn.world?.spawn(spawn, Zombie::class.java)
-				baseText += "\n${ChatColor.RED}${ChatColor.BOLD}[CHEF BARBARE]${ChatColor.RESET}${ChatColor.RED} Attaquez cet intrus !"
+				e.player.sendMessage("${ChatColor.RED}${ChatColor.BOLD}[CHEF BARBARE]${ChatColor.RESET}${ChatColor.RED} Attaquez cet intrus !")
 			}
 			TerritoryTypes.DUNGEON -> {
 				spawn.world?.spawn(spawn, Zombie::class.java)
-				baseText += "\n${ChatColor.RED}${ChatColor.BOLD}[BOSS]${ChatColor.RESET}${ChatColor.RED} Ne le laissez pas passer !"
+				e.player.sendMessage("${ChatColor.RED}${ChatColor.BOLD}[BOSS]${ChatColor.RESET}${ChatColor.RED} Ne le laissez pas passer !")
 			}
 		}
-		return baseText
+		return "${ChatColor.GOLD}Vous entrez dans ${this.color}${this.humanName}${ChatColor.RESET}${ChatColor.GOLD}"
 	}
 
 	open fun leave(e: PlayerMoveEvent): String {
@@ -263,11 +258,19 @@ enum class Territory(
 		return "${ChatColor.GOLD}Vous quittez ${this.color}${this.humanName}${ChatColor.RESET}${ChatColor.GOLD}."
 	}
 
+	open fun spendSalary() {
+
+	}
+
 	open fun initialize() {
 		region = WorldGuard.getInstance()?.platform?.regionContainer?.get(BukkitAdapter.adapt(Bukkit.getWorld("world")))
 			?.getRegion(regionId)
 		if (!isCorrect) WesterosRP.instance.logger.warning("Territory ${this.name} region cannot be loaded successfully !")
-		else WesterosRP.instance.server.pluginManager.registerEvents(Listeners(), WesterosRP.instance)
+		else {
+			WesterosRP.instance.server.pluginManager.registerEvents(Listeners(), WesterosRP.instance)
+			region!!.flags.clear()
+			region!!.setFlag(Flags.PASSTHROUGH, StateFlag.State.ALLOW)
+		}
 	}
 
 	fun contains(loc: Location) = region?.contains(BlockVector2.at(loc.x, loc.z))
@@ -278,10 +281,7 @@ enum class Territory(
 		@EventHandler(priority = EventPriority.HIGHEST)
 		open fun blockPlace(e: BlockPlaceEvent) {
 			if(!checkPosition(region!!, e.block.location)) return
-			if(isOwner(e.player)) {
-				e.isCancelled = false
-				return
-			}
+			if(isOwner(e.player) || Team.getPlayerTeam(e.player)?.isAdmin() == true) return
 			if(e.block.type == Material.ENDER_CHEST || e.block.type.toString().contains("SHULKER_BOX")) {
 				e.isCancelled = false
 				return
@@ -290,10 +290,29 @@ enum class Territory(
 		}
 
 		@EventHandler(priority = EventPriority.HIGHEST)
+		open fun bucketFillEvent(e: PlayerBucketFillEvent) {
+			if(!checkPosition(region!!, e.block.location)) return
+			if(isOwner(e.player)) {
+				return
+			}
+			e.isCancelled = true
+			e.player.sendCoolErrorMessage("Vous ne pouvez pas remplir votre seau ici !")
+		}
+
+		@EventHandler(priority = EventPriority.HIGHEST)
+		open fun bucketEmptyEvent(e: PlayerBucketEmptyEvent) {
+			if(!checkPosition(region!!, e.block.location)) return
+			if(isOwner(e.player)) {
+				return
+			}
+			e.isCancelled = true
+			e.player.sendCoolErrorMessage("Vous ne pouvez pas vider votre seau ici !")
+		}
+
+		@EventHandler(priority = EventPriority.HIGHEST)
 		open fun blockBreak(e: BlockBreakEvent) {
 			if(!checkPosition(region!!, e.block.location)) return
 			if(isOwner(e.player)) {
-				e.isCancelled = false
 				return
 			}
 			if(e.block.type == Material.ENDER_CHEST || e.block.type.toString().contains("SHULKER_BOX")) {
@@ -311,9 +330,9 @@ enum class Territory(
 		@EventHandler(priority = EventPriority.HIGHEST)
 		open fun playerInteract(e: PlayerInteractEvent) {
 			if (e.clickedBlock == null) return
+			if(e.clickedBlock?.state is BlockInventoryHolder) return
 			if (!checkPosition(region!!, e.clickedBlock?.location!!)) return
 			if (isOwner(e.player)) {
-				e.isCancelled = false
 				return
 			}
 			if(e.material.toString().contains("DOOR")) {
@@ -327,7 +346,6 @@ enum class Territory(
 			if (!checkPosition(region!!, e.vehicle.location)) return
 			if (e.attacker?.type != EntityType.PLAYER) return
 			if (isOwner(e.attacker as Player)) {
-				e.isCancelled = false
 				return
 			}
 			e.isCancelled = true
@@ -339,7 +357,6 @@ enum class Territory(
 			if (!checkPosition(region!!, e.vehicle.location)) return
 			if (e.attacker?.type != EntityType.PLAYER) return
 			if (isOwner(e.attacker as Player)) {
-				e.isCancelled = false
 				return
 			}
 			e.isCancelled = true
@@ -361,6 +378,9 @@ enum class Territory(
 		@EventHandler(priority = EventPriority.HIGHEST)
 		open fun playerTeleport(e: PlayerTeleportEvent) {
 			if(!checkPosition(region!!, e.from)) return
+			if (isOwner(e.player)) {
+				return
+			}
 			if(e.cause == PlayerTeleportEvent.TeleportCause.ENDER_PEARL
 				&& type != TerritoryTypes.SPAWN
 				&& isCorrect && !checkPosition(region!!, e.to!!)) {
@@ -369,5 +389,7 @@ enum class Territory(
 				e.player.sendCoolErrorMessage("Vous ne pouvez pas vous téléporter là bas !")
 			}
 		}
+
+
 	}
 }
