@@ -30,8 +30,8 @@ commands:
     usage: "/<command> [disable|enable]"
   wreliclist:
     description: "Permet d'afficher la liste des reliques"
-    permission: westerosrp.admin
-    permission-message: Vous devez être administrateur pour effectuer cette commande !
+    permission: westerosrp.joueur
+    permission-message: Vous devez être un joeuur pour effectuer cette commande !
     usage: "/<command>"
 permissions:
   westerosrp.*:
