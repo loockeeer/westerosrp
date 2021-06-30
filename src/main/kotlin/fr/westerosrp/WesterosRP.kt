@@ -59,7 +59,9 @@ class WesterosRP : JavaPlugin() {
 		server.pluginManager.registerEvents(PlayerChat(), this)
 		server.pluginManager.registerEvents(PlayerJoin(), this)
 		server.pluginManager.registerEvents(PlayerQuit(), this)
-		server.pluginManager.registerEvents(PlayerMove(), this)
+		server.pluginManager.registerEvents(TerritoryListeners(), this)
+		server.pluginManager.registerEvents(MonthListeners(), this)
+		server.pluginManager.registerEvents(RelicListeners(), this)
 
 		val luckPerms = server.servicesManager.load(LuckPerms::class.java)
 		if (luckPerms != null) {
