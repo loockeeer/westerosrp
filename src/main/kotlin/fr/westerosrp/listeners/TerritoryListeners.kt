@@ -12,14 +12,11 @@ import org.bukkit.Location
 import org.bukkit.block.Biome
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
-import org.bukkit.event.player.PlayerJoinEvent
-import org.bukkit.event.player.PlayerMoveEvent
-import org.bukkit.event.player.PlayerQuitEvent
-import org.bukkit.event.player.PlayerTeleportEvent
+import org.bukkit.event.player.*
 import java.util.*
 
 
-class PlayerMove : Listener {
+class TerritoryListeners : Listener {
 	private fun checkPosition(region: ProtectedRegion, loc: Location): Boolean {
 		return region.contains(BlockVector2.at(loc.x, loc.z))
 	}
@@ -63,6 +60,11 @@ class PlayerMove : Listener {
 				it.entered[e.player.uniqueId] = currentTime
 			}
 		}
+	}
+
+	@EventHandler
+	fun playerRespawn(e: PlayerRespawnEvent) {
+		playerMove(PlayerMoveEvent(e.player, e.player.location, e.respawnLocation))
 	}
 }
 

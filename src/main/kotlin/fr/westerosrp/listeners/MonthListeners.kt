@@ -13,7 +13,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.player.PlayerPortalEvent
 import org.bukkit.event.world.PortalCreateEvent
 
-class MonthEvents : Listener {
+class MonthListeners : Listener {
 	@EventHandler
 	fun portalCreate(e: PortalCreateEvent) {
 		if(e.entity?.type != EntityType.PLAYER) return
