@@ -44,6 +44,8 @@ enum class Month(val message: String) {
 		override fun isActivated(currentMonth: Int) = true
 
 		override fun messageInhibitor(players: Collection<Player>) = players
+
+		override fun execute(currentMonth: Int) = Territory.values().forEach(Territory::spendSalary)
 	};
 
 	companion object {
